@@ -39,6 +39,7 @@ public class Rook extends Piece {
 		Piece destinationPiece = board[newPosition.getRow()][newPosition.getColumn()];
 		if (destinationPiece==null || destinationPiece.getColor()!=this.color){
 			//Si la posición destino está vacío o tiene una pieza de otro color
+			this.setMoved();
 			return true;
 		}
 		return false;

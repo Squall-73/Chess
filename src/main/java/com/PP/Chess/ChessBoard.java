@@ -10,7 +10,7 @@ public class ChessBoard {
 		setupPieces();
 	}
 
-	private void setBoard(){
+	private void setupPieces(){
 		//método para inicializar el tablero
 
 		//Colocación de torres
@@ -48,6 +48,7 @@ public class ChessBoard {
 	}
 
 	public void movePiece(Position start, Position end){
+
 		//Chequea si la posición inicial tiene una pieza y si el movimiento es válido
 		if(board[start.getRow()][start.getColumn()] != null && board[start.getRow()][start.getColumn()].isValidMove(end, board)) {
 			//Realizar el movimiento
