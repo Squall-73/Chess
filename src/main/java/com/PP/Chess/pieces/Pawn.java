@@ -36,7 +36,7 @@ public class Pawn extends Piece {
 		//Comer en diagonal
 		if(Math.abs(colDiff)==1 && rowDiff == 1 && board[newPosition.getRow()][newPosition.getColumn()]!=null
 				&& board[newPosition.getRow()][newPosition.getColumn()].getColor() !=this.color){
-			//Falta el código que captura la pieza
+			this.setMoved();
 			return true;
 
 		}

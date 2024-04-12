@@ -34,6 +34,7 @@ public class Bishop extends Piece {
 		//Verifico que la posición final este vacía o sea una pieza contraria
 		Piece targetPiece = board[newPosition.getRow()][newPosition.getColumn()];
 		if(targetPiece==null){
+			this.setMoved();
 			return true;
 		}else{
 			return targetPiece.getColor()!=this.getColor();

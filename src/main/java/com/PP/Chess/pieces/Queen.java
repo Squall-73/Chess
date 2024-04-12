@@ -37,6 +37,11 @@ public class Queen extends	Piece{
 		}
 		//Movimiento válido, resta chequear posición final
 		Piece destinationPiece = board[newPosition.getRow()][newPosition.getColumn()];
-		return destinationPiece == null || destinationPiece.getColor() != this.getColor();
+		if (destinationPiece==null || destinationPiece.getColor()!=this.color){
+			//Si la posición destino está vacío o tiene una pieza de otro color
+			this.setMoved();
+			return true;
+		}
+		return false;
 	}
 }
