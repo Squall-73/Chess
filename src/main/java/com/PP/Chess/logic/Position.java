@@ -1,4 +1,4 @@
-package com.PP.Chess;
+package com.PP.Chess.logic;
 
 public class Position {
 	private int row;

@@ -1,4 +1,6 @@
-package com.PP.Chess;
+package com.PP.Chess.pieces;
+
+import com.PP.Chess.logic.Position;
 
 public abstract class Piece {
 	protected Position position;

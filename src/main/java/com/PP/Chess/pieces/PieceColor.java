@@ -1,4 +1,4 @@
-package com.PP.Chess;
+package com.PP.Chess.pieces;
 
 public enum PieceColor{
 		BLACK,

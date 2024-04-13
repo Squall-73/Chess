@@ -1,7 +1,5 @@
 package com.PP.Chess.pieces;
-import com.PP.Chess.Piece;
-import com.PP.Chess.PieceColor;
-import com.PP.Chess.Position;
+import com.PP.Chess.logic.Position;
 
 public class King extends Piece {
 	public King (PieceColor color, Position position){super(color,position);}
@@ -20,7 +18,6 @@ public class King extends Piece {
 		Piece destinationPiece = board[newPosition.getRow()][newPosition.getColumn()];
 		if (destinationPiece==null || destinationPiece.getColor()!=this.color){
 			//Si la posición destino está vacío o tiene una pieza de otro color
-			this.setMoved();
 			return true;
 		}
 

@@ -1,10 +1,22 @@
-package com.PP.Chess;
+package com.PP.Chess.board;
 
+import com.PP.Chess.logic.Position;
 import com.PP.Chess.pieces.*;
 
 public class ChessBoard {
 	private Piece[][] board;
-
+	public Piece[][] getBoard() {
+		return board;
+	}
+	public Piece getPiece(int row, int column) {
+		return board[row][column];
+	}
+	public void setPiece(int row, int column, Piece piece) {
+		board[row][column] = piece;
+		if (piece != null) {
+			piece.setPosition(new Position(row, column));
+		}
+	}
 	public ChessBoard(){
 		this.board = new Piece[8][8]; // Tablero 8x8
 		setupPieces();
@@ -53,6 +65,8 @@ public class ChessBoard {
 		if(board[start.getRow()][start.getColumn()] != null && board[start.getRow()][start.getColumn()].isValidMove(end, board)) {
 			//Realizar el movimiento
 			board[end.getRow()][end.getColumn()] = board[start.getRow()][start.getColumn()];
+			//Marca la pieza como movida, si no se movio originalmente
+			if(!board[end.getRow()][end.getColumn()].getMoved()){board[end.getRow()][end.getColumn()].setMoved();}
 			//Actualizar posicion de pieza
 			board[end.getRow()][end.getColumn()].setPosition(end);
 			//Limpiar posición inicial

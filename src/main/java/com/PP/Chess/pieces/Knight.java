@@ -1,8 +1,6 @@
 package com.PP.Chess.pieces;
 
-import com.PP.Chess.Piece;
-import com.PP.Chess.PieceColor;
-import com.PP.Chess.Position;
+import com.PP.Chess.logic.Position;
 
 public class Knight extends Piece {
 	public Knight(PieceColor color, Position position){
@@ -25,7 +23,6 @@ public class Knight extends Piece {
 		//Verifico que la posición final este vacía o sea una pieza contraria
 		Piece targetPiece = board[newPosition.getRow()][newPosition.getColumn()];
 		if(targetPiece==null){
-			this.setMoved();
 			return true;
 		}else{
 			return targetPiece.getColor()!=this.getColor();

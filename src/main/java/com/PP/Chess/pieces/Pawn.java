@@ -1,8 +1,6 @@
 package com.PP.Chess.pieces;
 
-import com.PP.Chess.Piece;
-import com.PP.Chess.PieceColor;
-import com.PP.Chess.Position;
+import com.PP.Chess.logic.Position;
 
 public class Pawn extends Piece {
 	public Pawn(PieceColor color, Position position){
@@ -36,7 +34,6 @@ public class Pawn extends Piece {
 		//Comer en diagonal
 		if(Math.abs(colDiff)==1 && rowDiff == 1 && board[newPosition.getRow()][newPosition.getColumn()]!=null
 				&& board[newPosition.getRow()][newPosition.getColumn()].getColor() !=this.color){
-			this.setMoved();
 			return true;
 
 		}
