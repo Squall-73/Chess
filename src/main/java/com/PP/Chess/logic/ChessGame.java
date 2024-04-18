@@ -102,40 +102,39 @@ public class ChessGame {
 		}
 		return true;//No hay posición a salvo - PERDISTE
 	}
-	public boolean shortCastling(PieceColor color){
-		int row;
-		if(color==PieceColor.WHITE){
-			row = 7;
-		}else{
-			row =0;
-		}
-		int startCol=4;
-		//Reviso que el rey esté en posición original sin haberse movido y no en jaque
-		Position kingPosition = new Position (row,startCol);
+
+	public boolean castling(PieceColor color, int kingDestCol, int rookDestCol, int rookStartCol) {
+		int row = (color == PieceColor.WHITE) ? 7 : 0;
+		int startCol = 4;
+		// Verificar si el rey está en posición original sin haberse movido y no en jaque
+		Position kingPosition = new Position(row, startCol);
 		King king = (King) board.getPiece(kingPosition.getRow(), kingPosition.getColumn());
-		if(king == null|| king.getMoved()||isInCheck(color)||
-				!king.isValidMove(new Position(row, startCol +2), board.getBoard())){
-			/*Si no hay rey en posición original, o ya se movió, o está en jaque,
-			o no puede moverse a la posición destino no se puede hacer enroque corto*/
-			return false;
+		if (king == null || king.getMoved() || isInCheck(color) ||
+				!king.isValidMove(new Position(row, kingDestCol), board.getBoard())) {
+			return false; // No se puede hacer el enroque
 		}
-		//Verifico posición original de la torre
-		Position rookPosition = new Position(row, startCol+3);
+		// Verificar posición original de la torre
+		Position rookPosition = new Position(row, rookStartCol);
 		Rook rook = (Rook) board.getPiece(rookPosition.getRow(), rookPosition.getColumn());
-		if(rook == null || rook.getMoved()){
-			//Si no hay torre en la posición o ya se movió no puedo enrocar
-			return false;
+		if (rook == null || rook.getMoved()) {
+			return false; // No se puede hacer el enroque
 		}
-		//Verifico que las casillas entre el rey y la torre estén vacías
-		for(int col = startCol +1; col < startCol +3; col++){
-			if(board.getPiece(row,col)!= null){
-				//Hay una pieza, no se puede enrocar
-				return false;
+		// Verificar que las casillas entre el rey y la torre estén vacías
+		int step = (rookStartCol < startCol) ? -1 : 1;
+		for (int col = startCol + step; col != rookStartCol; col += step) {
+			if (board.getPiece(row, col) != null) {
+				return false; // Hay una pieza, no se puede hacer el enroque
 			}
 		}
-		//Realizo el enroque corto
-		board.movePiece(kingPosition, new Position(row, startCol + 2)); //Muevo el rey
-		board.movePiece(rookPosition, new Position(row, startCol + 1)); //Muevo la torre
-		return true; // Enroque corto realizado con éxito
+		// Realizar el enroque
+		board.movePiece(kingPosition, new Position(row, kingDestCol)); // Mover el rey
+		board.movePiece(rookPosition, new Position(row, rookDestCol)); // Mover la torre
+		return true; // Enroque realizado con éxito
+	}
+	public boolean shortCastling(PieceColor color) {
+		return castling(color, 6, 5, 7); // Columnas de destino y de inicio de la torre para el enroque corto
+	}
+	public boolean longCastling(PieceColor color) {
+		return castling(color, 2, 3, 0); // Columnas de destino y de inicio de la torre para el enroque largo
 	}
 }
