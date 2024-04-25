@@ -137,4 +137,35 @@ public class ChessGame {
 	public boolean longCastling(PieceColor color) {
 		return castling(color, 2, 3, 0); // Columnas de destino y de inicio de la torre para el enroque largo
 	}
+	public ChessBoard getBoard(){
+		return this.board;
+	}
+	public void resetGame(){
+		this.board = new ChessBoard(); //Reinicia el tablero
+		this.whiteTurn=true; // Setea turno en blancas
+	}
+	public PieceColor getCurrentPlayerColor(){
+		return whiteTurn ? PieceColor.WHITE : PieceColor.BLACK;
+	}
+	private Position selectedPosition; //Lleva registro de la posición seleccionada
+
+	public boolean isPieceSelected(){
+		return selectedPosition != null;
+	}
+	public boolean handleSquareSelection(int row,int col){
+		if(selectedPosition==null){
+			//Intenta seleccionar una pieza
+			Piece selectedPiece = board.getPiece(row,col);
+			if (selectedPiece !=null && selectedPiece.getColor() ==(whiteTurn ? PieceColor.WHITE : PieceColor.BLACK)){
+				selectedPosition = new Position(row,col);
+				return false;//Pieza seleccionada pero no movida
+			}
+		}else{
+			//Intenta mover la pieza seleccionada
+			boolean moveMade = makeMove(selectedPosition, new Position(row,col));
+			selectedPosition = null;//Resetea la posición seleccionada
+			return moveMade;//Devuelve verdadero si el movimiento fue exitoso
+		}
+		return false; //Devuelve falso si la pieza no se movio o no fue seleccionada
+	}
 }

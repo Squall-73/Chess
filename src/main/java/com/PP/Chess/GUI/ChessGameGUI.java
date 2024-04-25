@@ -2,7 +2,9 @@ package com.PP.Chess.GUI;
 
 import com.PP.Chess.board.ChessBoard;
 import com.PP.Chess.logic.ChessGame;
+import com.PP.Chess.logic.Position;
 import com.PP.Chess.pieces.*;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,9 +12,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class ChessGameGUI extends JFrame {
-	private final ChessSquareComponent[]][] squares = new ChessSquareComponent [8][8];
+	private final ChessSquareComponent[][] squares = new ChessSquareComponent [8][8];
 	private final ChessGame game = new ChessGame();
 	private final Map<Class<?extends Piece>, String > pieceUnicodeMap = new HashMap<>(){
 		{
@@ -29,6 +32,7 @@ public class ChessGameGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new GridLayout(8,8));
 		initializeBoard();
+		addGameResetOption();
 		pack(); //Ajusta la ventana al tablero
 		setVisible(true);
 	}
@@ -51,7 +55,7 @@ public class ChessGameGUI extends JFrame {
 		refreshBoard();
 	};
 	private void refreshBoard(){
-		ChessBoard = game.getBoard();
+		ChessBoard board = game.getBoard();
 		for(int row =0; row<8; row++){
 			for (int col=0;row<8;row++){
 				Piece piece = board.getPiece(row,col);
@@ -66,10 +70,18 @@ public class ChessGameGUI extends JFrame {
 		}
 	};
 	private void handleSquareClick(int row, int col){
-		if(game.handleSquareSelection(row,col)){
+		boolean moveResult = game.handleSquareSelection(row,col);
+		clearHighlights();
+		if(moveResult){
+			//Si un movimiento se realizó, refresca y chequea el estado de juego sin movimientos resaltados
 			refreshBoard();
 			checkGameState();
+			checkGameOver();
+		}else if (game.isPieceSelected()){
+			//si una pieza no se movió, pero fue seleccionada, resalta movimientos válidos
+			highlightLegalMoves(new Position(row,col));
 		}
+		refreshBoard();
 	};
 	private void checkGameState(){
 		PieceColor currentPlayer = game.getCurrentPlayerColor();
@@ -80,5 +92,31 @@ public class ChessGameGUI extends JFrame {
 	};
 	public static void main(String[] args){
 		SwingUtilities.invokeLater(ChessGameGUI::new);
+	}
+	private void highlightLegalMoves(Position position){
+		List<Position> legalMoves = game.getLegalMovesForPieceAt(position);
+		for (Position move : legalMoves){
+			squares[move.getRow()][move.getColumn()].setBackground(Color.GREEN);
+		}
+	}
+	private void clearHighlights(){
+		for (int row=0; row<8; row ++){
+			for(int col =0;col<8;col++){
+				squares[row][col].setBackground((row + col) % 2 == 0 ? Color.LIGHT_GRAY : new Color(205, 133, 63));
+			}
+		}
+	}
+	private void addGameResetOption(){
+		JMenuBar menuBar = new JMenuBar();
+		JMenu gameMenu = new JMenu("Game");
+		JMenuItem resetItem = new JMenuItem("Reset");
+		resetItem.addActionListener(e -> resetGame());
+		gameMenu.add(resetItem);
+		menuBar.add(gameMenu);
+		setJMenuBar(menuBar);
+	}
+	private void resetGame(){
+		game.resetGame();
+		refreshBoard();
 	}
 }
