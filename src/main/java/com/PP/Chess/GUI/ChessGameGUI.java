@@ -119,4 +119,15 @@ public class ChessGameGUI extends JFrame {
 		game.resetGame();
 		refreshBoard();
 	}
+	private void checkGameOver(){
+		if(game.isCheckmate(game.getCurrentPlayerColor())){
+			int response =JOptionPane.showConfirmDialog(this,
+					"Checkmate! Would you like to play again","Game Over",JOptionPane.YES_NO_OPTION);
+		if (response ==JOptionPane.YES_OPTION){
+			resetGame();
+		}else {
+			System.exit(0);
+		}
+		}
+	}
 }
