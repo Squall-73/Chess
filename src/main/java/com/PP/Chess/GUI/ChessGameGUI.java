@@ -57,7 +57,7 @@ public class ChessGameGUI extends JFrame {
 	private void refreshBoard(){
 		ChessBoard board = game.getBoard();
 		for(int row =0; row<8; row++){
-			for (int col=0;row<8;row++){
+			for (int col=0;col<8;col++){
 				Piece piece = board.getPiece(row,col);
 				if(piece != null){
 					String symbol = pieceUnicodeMap.get(piece.getClass());
@@ -85,7 +85,8 @@ public class ChessGameGUI extends JFrame {
 	};
 	private void checkGameState(){
 		PieceColor currentPlayer = game.getCurrentPlayerColor();
-		boolean inCheck = game.isInCheck(currentPlayer);
+		Position kingPosition = game.findKingPosition(currentPlayer);
+		boolean inCheck = game.isInCheck(currentPlayer,kingPosition);
 		if(inCheck){
 			JOptionPane.showMessageDialog(this,currentPlayer + " is in check!");;
 		}

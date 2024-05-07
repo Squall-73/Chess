@@ -8,16 +8,17 @@ public class ChessSquareComponent extends JButton {
 	private int col;
 
 	public ChessSquareComponent(int row, int col){
-		this.col = col;
+
 		this.row=row;
+		this.col=col;
 		initButton();
 	}
 
 	private void initButton(){
 		//Setea tamaño preferencial de boton para uniformidad
-		setPreferredSize(new Dimension(64,64));
+		setPreferredSize(new Dimension(96,64));
 		//Setea el color del fondo, basado en fila y columna para simular tablero de ajedrez
-		if(row+col%2==0){
+		if((row+col)%2==0){
 			setBackground(Color.LIGHT_GRAY);
 		} else {
 			setBackground(new Color(205, 133, 63));
