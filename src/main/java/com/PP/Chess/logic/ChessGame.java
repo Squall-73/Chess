@@ -4,7 +4,7 @@ import com.PP.Chess.board.ChessBoard;
 import com.PP.Chess.pieces.King;
 import com.PP.Chess.pieces.Piece;
 import com.PP.Chess.pieces.PieceColor;
-import com.PP.Chess.pieces.Rook;
+//import com.PP.Chess.pieces.Rook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,14 +107,14 @@ public class ChessGame {
 		return true;//No hay posición a salvo - PERDISTE
 	}
 
-	public boolean castling(PieceColor color, int kingDestCol, int rookDestCol, int rookStartCol) {
+	/*public boolean castling(PieceColor color,  int rookStartCol) {
 		int row = (color == PieceColor.WHITE) ? 7 : 0;
 		int startCol = 4;
 		// Verificar si el rey está en posición original sin haberse movido y no en jaque
 		Position kingPosition = new Position(row, startCol);
 		King king = (King) board.getPiece(kingPosition.getRow(), kingPosition.getColumn());
-		if (king == null || king.getMoved() || isInCheck(color,kingPosition) ||
-				!king.isValidMove(new Position(row, kingDestCol), board.getBoard())) {
+
+		if (king==null||king.getMoved() || isInCheck(color,kingPosition) ) {
 			return false; // No se puede hacer el enroque
 		}
 		// Verificar posición original de la torre
@@ -131,33 +131,35 @@ public class ChessGame {
 			}
 		}
 		// Realizar el enroque
-		board.movePiece(kingPosition, new Position(row, kingDestCol)); // Mover el rey
-		board.movePiece(rookPosition, new Position(row, rookDestCol)); // Mover la torre
+		//board.movePiece(kingPosition, new Position(row, kingDestCol)); // Mover el rey
+		//board.movePiece(rookPosition, new Position(row, rookDestCol)); // Mover la torre
 		return true; // Enroque realizado con éxito
 	}
 	public boolean shortCastling(PieceColor color) {
+
 		Position actPos= (PieceColor.WHITE==color)? new Position(7,4):new Position(0,4);
 		Position destPos= (PieceColor.WHITE==color)? new Position(7,6):new Position(0,6);
-		if(wouldBeInCheckAfterMove(color,actPos,destPos)){
-		return castling(color, 6, 5, 7); // Columnas de destino y de inicio de la torre para el enroque corto
-	}else{
+		if(!wouldBeInCheckAfterMove(color,actPos,destPos)){
+
+			return castling(color,  7); // Columnas de destino y de inicio de la torre para el enroque corto
+		}else{
 			return false;
 		}
 	}
 	public boolean longCastling(PieceColor color) {
 		Position actPos= (PieceColor.WHITE==color)? new Position(7,4):new Position(0,4);
 		Position destPos= (PieceColor.WHITE==color)? new Position(7,2):new Position(0,2);
-		if(wouldBeInCheckAfterMove(color,actPos,destPos)){
-			return castling(color, 2, 53, 0); // Columnas de destino y de inicio de la torre para el enroque corto
+		if(!wouldBeInCheckAfterMove(color,actPos,destPos)){
+			return castling(color,  0); // Columnas de destino y de inicio de la torre para el enroque corto
 		}else{
 			return false;
-		}}
+		}}*/
 	public ChessBoard getBoard(){
 		return this.board;
 	}
 	public void resetGame(){
 		this.board = new ChessBoard(); //Reinicia el tablero
-		this.whiteTurn=true; // Setea turno en blancas
+		this.whiteTurn=true; // Determina turno en blancas
 	}
 	public PieceColor getCurrentPlayerColor(){
 		return whiteTurn ? PieceColor.WHITE : PieceColor.BLACK;
@@ -181,30 +183,21 @@ public class ChessGame {
 			selectedPosition = null;//Resetea la posición seleccionada
 			return moveMade;//Devuelve verdadero si el movimiento fue exitoso
 		}
-		return false; //Devuelve falso si la pieza no se movio o no fue seleccionada
+		return false; //Devuelve falso si la pieza no se movió o no fue seleccionada
 	}
 	public List<Position> getLegalMovesForPieceAt(Position position){
 		Piece selectedPiece = board.getPiece(position.getRow(),position.getColumn());
 		if (selectedPiece==null) return new ArrayList<>();
 		List<Position> legalMoves = new ArrayList<>();
-		switch (selectedPiece.getClass().getSimpleName()){
-			case "Pawn":
-				addPawnMoves(position,selectedPiece.getColor(),legalMoves);
-				break;
-			case "Rook":
-				addLineMoves(position, new int[][] {{1,0},{-1,0},{0,1},{0,-1}}, legalMoves);
-				break;
-			case "Knight":
-				addSingleMoves(position, new int[][] {{-2,1},{-2,-1},{-1,-2},{-1,2},{1,-2},{1,2},{2,-1},{2,1}},legalMoves);
-				break;
-			case "Bishop":
-				addLineMoves(position, new int[][] {{1,1},{-1,1},{-1,1},{-1,-1}}, legalMoves);
-				break;
-			case "Queen":
-				addLineMoves(position, new int[][] {{1,0},{-1,0},{0,1},{0,-1},{1,1},{-1,1},{-1,1},{-1,-1}}, legalMoves);
-				break;
-			case "King":
-				addKingMoves(position,selectedPiece.getColor(),legalMoves);
+		switch (selectedPiece.getClass().getSimpleName()) {
+			case "Pawn" -> addPawnMoves(position, selectedPiece.getColor(), legalMoves);
+			case "Rook" -> addLineMoves(position, new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}, legalMoves);
+			case "Knight" ->
+					addSingleMoves(position, new int[][]{{-2, 1}, {-2, -1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}}, legalMoves);
+			case "Bishop" -> addLineMoves(position, new int[][]{{1, 1}, {-1, 1}, {1, -1}, {-1, -1}}, legalMoves);
+			case "Queen" ->
+					addLineMoves(position, new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}}, legalMoves);
+			case "King" -> addSingleMoves(position, new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}}, legalMoves);
 		}
 		return legalMoves;
 	}
@@ -261,7 +254,7 @@ public class ChessGame {
 			}
 		}
 	}
-	private void addKingMoves(Position position,PieceColor color ,List<Position> legalMoves){
+	/*private void addKingMoves(Position position,PieceColor color ,List<Position> legalMoves){
 
 		// Agregar movimientos de enroque si son posibles
 		if (shortCastling(color)) {
@@ -271,5 +264,5 @@ public class ChessGame {
 			legalMoves.add(new Position((color == PieceColor.WHITE) ? 7 : 0, 2)); // Agregar posición de enroque largo
 		}
 		addSingleMoves(position, new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}}, legalMoves);
-	}
+	}*/
 }
